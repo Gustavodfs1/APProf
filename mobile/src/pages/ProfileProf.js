@@ -59,6 +59,8 @@ function ProfileProf({ navigation }) {
           }}
         >
           <Rating
+            type="custom"
+            ratingImage={require("./assets/star.png")}
             style={{ backgroundColor: "#F5F5f5", borderRadius: 40 }}
             reviews={["Ruim", "Bom", "Ótimo", "Profissional", "Mestre"]}
             count={5}
