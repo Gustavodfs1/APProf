@@ -15,12 +15,12 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 
 import api from "../services/api";
-import { connect, disconnect, subscribeToNewDevs } from "../services/socket";
+import { connect, disconnect, subscribeToNewProfs } from "../services/socket";
 
 function Main({ navigation }) {
-  const [devs, setDevs] = useState([]);
+  const [profs, setProfs] = useState([]);
   const [currentRegion, setCurrentRegion] = useState(null);
-  const [techs, setTechs] = useState("");
+  const [materias, setMaterias] = useState("");
 
   useEffect(() => {
     async function loadInitialPosition() {
@@ -45,14 +45,14 @@ function Main({ navigation }) {
   }, []);
 
   useEffect(() => {
-    subscribeToNewDevs(dev => setDevs([...devs, dev]));
-  }, [devs]);
+    subscribeToNewProfs(prof => setProf([...profs, prof]));
+  }, [profs]);
 
   function setupWebsocket() {
     disconnect();
 
     const { latitude, longitude } = currentRegion;
-    connect(latitude, longitude, techs);
+    connect(latitude, longitude, materias);
   }
 
   async function loadDevs() {
@@ -62,11 +62,11 @@ function Main({ navigation }) {
       params: {
         latitude,
         longitude,
-        techs
+        materias
       }
     });
 
-    setDevs(response.data);
+    setProfs(response.data);
     setupWebsocket();
   }
 
@@ -85,7 +85,7 @@ function Main({ navigation }) {
         initialRegion={currentRegion}
         style={styles.map}
       >
-        {devs.map(dev => (
+        {profs.map(dev => (
           <Marker
             key={dev._id}
             coordinate={{
@@ -120,8 +120,8 @@ function Main({ navigation }) {
           placeholderTextColor="#999"
           autoCapitalize="words"
           autoCorrect={false}
-          value={techs}
-          onChangeText={setTechs}
+          value={materias}
+          onChangeText={setMaterias}
         />
 
         <TouchableOpacity onPress={loadDevs} style={styles.loadButton}>

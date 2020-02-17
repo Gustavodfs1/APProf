@@ -13,6 +13,7 @@ module.exports = {
     const {
       name,
       eMail,
+      telefone,
       senha,
       avatar_url,
       materias,
@@ -36,6 +37,7 @@ module.exports = {
     prof = await Prof.create({
       name,
       eMail,
+      telefone,
       senha,
       avatar_url,
       materias,

@@ -4,15 +4,15 @@ const socket = socketio("http://192.168.0.11:3333", {
   autoConnect: false
 });
 
-function subscribeToNewDevs(subcribeFunction) {
-  socket.on("new-dev", subcribeFunction);
+function subscribeToNewProfs(subcribeFunction) {
+  socket.on("new-prof", subcribeFunction);
 }
 
-function connect(latitude, longitude, techs) {
+function connect(latitude, longitude, materias) {
   socket.io.opts.query = {
     latitude,
     longitude,
-    techs
+    materias
   };
   socket.connect();
   socket.on("message", text => {
@@ -26,4 +26,4 @@ function disconnect() {
   }
 }
 
-export { connect, disconnect, subscribeToNewDevs };
+export { connect, disconnect, subscribeToNewProfs };
