@@ -1,5 +1,6 @@
 import React from "react";
 import { StatusBar, YellowBox } from "react-native";
+import "./Utils/firebaseConfig";
 
 import Routes from "./src/pages/routes";
 

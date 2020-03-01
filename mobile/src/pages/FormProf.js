@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  KeyboardAvoidingView,
-  Text,
-  Alert
-} from "react-native";
-import { Avatar, Button } from "react-native-elements";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import api from "../services/api";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
-import InfoPrincipais from "./InfoPrincipais";
+import { Formik } from "formik";
+import React, { useEffect, useState } from "react";
+import { Alert, KeyboardAvoidingView, StyleSheet, View } from "react-native";
+import { Button } from "react-native-elements";
+import * as Yup from "yup";
+import api from "../services/api";
 import BioDesc from "./BioDesc";
+import InfoPrincipais from "./InfoPrincipais";
 import Materias from "./Materias";
+import firebase from "firebase";
+import "firebase/auth";
+import "firebase/storage";
+import * as ImagePicker from "expo-image-picker";
+import AppProfAvatar from "../components/appProfAvatar";
 
 const initialValues = {
   name: "",
@@ -63,6 +61,7 @@ const SignupSchema = Yup.object().shape({
 function FormProf({ navigation }) {
   const [location, setLocation] = useState({});
   const [passo, setPasso] = useState(0);
+  const [imageUri, setImageUri] = useState("");
 
   const submit = async (values, actions) => {
     try {
@@ -88,7 +87,23 @@ function FormProf({ navigation }) {
       });
     }
   };
+  loginFirebase = async () => {
+    await firebase.auth().signInAnonymously();
+  };
+  avatarup = async () => {
+    let { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Atenção", "A foto de perfil é obrigatória");
+      status = await ImagePicker.requestCameraRollPermissionsAsync();
+    }
+  };
+  const setAvatar = async () => {
+    const image = await ImagePicker.launchImageLibraryAsync();
+    setImageUri(image.uri);
+  };
   useEffect(() => {
+    loginFirebase();
+    avatarup();
     _getLocationAsync();
   }, []);
 
@@ -177,17 +192,7 @@ function FormProf({ navigation }) {
               </View>
               <View style={styles.ViewAvatar}>
                 {passo == 0 && (
-                  <Avatar
-                    size="xlarge"
-                    rounded
-                    activeOpacity={0.7}
-                    style={styles.Avatar}
-                    source={{
-                      uri:
-                        "https://media-exp1.licdn.com/dms/image/C4E03AQFOgoziO6xKpQ/profile-displayphoto-shrink_200_200/0?e=1585180800&v=beta&t=KtpnJnk3Dea_Dk_-XhNRsSC_IjYA3UsUMatAHxGMd94"
-                    }}
-                    showEditButton
-                  />
+                  <AppProfAvatar uri={imageUri} setAvatar={setAvatar} />
                 )}
               </View>
             </View>
@@ -235,13 +240,6 @@ const styles = StyleSheet.create({
     width: 200,
     marginTop: 50,
     backgroundColor: "#f5f5f5"
-  },
-  Avatar: {
-    position: "absolute",
-    left: -80,
-    resizeMode: "contain",
-    width: 140,
-    height: 140
   }
 });
 
