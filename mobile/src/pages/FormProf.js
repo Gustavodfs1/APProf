@@ -7,12 +7,15 @@ import {
   Text,
   Alert
 } from "react-native";
-import { Input, Avatar, Button } from "react-native-elements";
+import { Avatar, Button } from "react-native-elements";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import api from "../services/api";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
+import InfoPrincipais from "./InfoPrincipais";
+import BioDesc from "./BioDesc";
+import Materias from "./Materias";
 
 const initialValues = {
   name: "",
@@ -59,6 +62,8 @@ const SignupSchema = Yup.object().shape({
 
 function FormProf({ navigation }) {
   const [location, setLocation] = useState({});
+  const [passo, setPasso] = useState(0);
+
   const submit = async (values, actions) => {
     try {
       const response = await api.post("/profs", { ...values, ...location });
@@ -91,7 +96,7 @@ function FormProf({ navigation }) {
     <Formik
       initialValues={initialValues}
       onSubmit={submit}
-      validationSchema={SignupSchema}
+      //validationSchema={SignupSchema}
     >
       {({
         handleChange,
@@ -99,74 +104,79 @@ function FormProf({ navigation }) {
         handleSubmit,
         values,
         errors,
-        touched
+        touched,
+        setFieldValue
       }) => (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
           <View style={styles.View}>
-            <ScrollView>
-              <View style={styles.flex}>
-                <View style={styles.backform}>
-                  <Input
-                    errorMessage={touched.name ? errors.name : null}
-                    placeholder="Nome"
-                    inputContainerStyle={styles.inputBio}
-                    onChangeText={handleChange("name")}
-                    onBlur={handleBlur("name")}
-                    value={values.name}
-                  ></Input>
-                  <Input
-                    errorMessage={touched.email ? errors.email : null}
-                    type="email"
-                    placeholder="E-mail"
-                    inputContainerStyle={styles.inputBio}
-                    onChangeText={handleChange("eMail")}
-                    onBlur={handleBlur("eMail")}
-                    value={values.eMail}
-                  ></Input>
-                  <Input
-                    errorMessage={touched.senha ? errors.senha : null}
-                    type="password"
-                    placeholder="Senha"
-                    inputContainerStyle={styles.inputBio}
-                    onChangeText={handleChange("senha")}
-                    onBlur={handleBlur("senha")}
-                    value={values.senha}
-                  ></Input>
-                  <Input
-                    errorMessage={touched.telefone ? errors.telefone : null}
-                    type="tel"
-                    placeholder="Telefone"
-                    inputContainerStyle={styles.inputBio}
-                    onChangeText={handleChange("telefone")}
-                    onBlur={handleBlur("telefone")}
-                    value={values.telefone}
-                  ></Input>
-                  <Input
-                    errorMessage={touched.bio ? errors.bio : null}
-                    placeholder="Fale sobre você"
-                    inputContainerStyle={styles.inputBio}
-                    onChangeText={handleChange("bio")}
-                    onBlur={handleBlur("bio")}
-                    value={values.bio}
-                  ></Input>
-                  <Input
-                    errorMessage={touched.descricao ? errors.descricao : null}
-                    placeholder="Você oferece quais matérias?"
-                    inputContainerStyle={styles.inputBio}
-                    onChangeText={handleChange("descricao")}
-                    onBlur={handleBlur("descricao")}
-                    value={values.descricao}
-                  ></Input>
-                  <Input
-                    errorMessage={touched.precoHora ? errors.precoHora : null}
-                    placeholder="Qual o valor da sua Hora/Aula?"
-                    inputContainerStyle={styles.inputBio}
-                    onChangeText={handleChange("precoHora")}
-                    onBlur={handleBlur("precoHora")}
-                    value={values.precoHora}
-                  ></Input>
+            <View style={styles.flex}>
+              <View style={styles.backform}>
+                <View style={{ flex: 4 }}>
+                  {passo === 0 && (
+                    <InfoPrincipais
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      values={values}
+                      errors={errors}
+                      touched={touched}
+                    />
+                  )}
+                  {passo === 1 && (
+                    <BioDesc
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      values={values}
+                      errors={errors}
+                      touched={touched}
+                    />
+                  )}
+                  {passo === 2 && (
+                    <Materias
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      values={values}
+                      errors={errors}
+                      touched={touched}
+                      setFieldValue={setFieldValue}
+                    />
+                  )}
                 </View>
-                <View style={styles.ViewAvatar}>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "flex-end"
+                  }}
+                >
+                  {passo === 2 && (
+                    <Button
+                      style={styles.Proximo}
+                      buttonStyle={{ backgroundColor: "green" }}
+                      title="Salvar"
+                      onPress={handleSubmit}
+                    ></Button>
+                  )}
+                  {passo < 2 && (
+                    <Button
+                      style={styles.Proximo}
+                      title="Proximo"
+                      onPress={() => {
+                        setPasso(p => p + 1);
+                      }}
+                    ></Button>
+                  )}
+                  {passo > 0 && (
+                    <Button
+                      style={styles.Voltar}
+                      title="Voltar"
+                      onPress={() => {
+                        setPasso(p => p - 1);
+                      }}
+                    ></Button>
+                  )}
+                </View>
+              </View>
+              <View style={styles.ViewAvatar}>
+                {passo == 0 && (
                   <Avatar
                     size="xlarge"
                     rounded
@@ -178,10 +188,9 @@ function FormProf({ navigation }) {
                     }}
                     showEditButton
                   />
-                </View>
+                )}
               </View>
-              <Button title="Salvar" onPress={handleSubmit}></Button>
-            </ScrollView>
+            </View>
           </View>
         </KeyboardAvoidingView>
       )}
@@ -190,6 +199,18 @@ function FormProf({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  Voltar: {
+    borderRadius: 200,
+    marginTop: -40,
+    marginLeft: 10,
+    width: "35%"
+  },
+  Proximo: {
+    borderRadius: 200,
+    width: "35%",
+    alignSelf: "flex-end",
+    marginRight: 10
+  },
   View: {
     flex: 1,
     backgroundColor: "#54CEDB"
@@ -208,8 +229,7 @@ const styles = StyleSheet.create({
     flex: 4,
     backgroundColor: "#f5f5f5",
     marginTop: 100,
-    borderTopRightRadius: 150,
-    height: "100%"
+    borderTopRightRadius: 150
   },
   inputBio: {
     width: 200,

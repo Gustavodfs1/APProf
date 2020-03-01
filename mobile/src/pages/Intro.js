@@ -43,7 +43,7 @@ function Intro({ navigation }) {
         iconRight
       />
       <TouchableOpacity onPress={() => navigation.navigate("FormProf", {})}>
-        <Text style={{ color: "blue", marginTop: 120 }}>
+        <Text style={{ color: "blue", marginTop: "20%" }}>
           Crie sua conta Gratis!
         </Text>
       </TouchableOpacity>
@@ -54,9 +54,8 @@ function Intro({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flex: 1,
     alignItems: "center",
-    marginTop: 250,
+    marginTop: "60%",
     backgroundColor: "#F5F5f5"
   },
 
