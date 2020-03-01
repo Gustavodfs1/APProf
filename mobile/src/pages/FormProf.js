@@ -29,6 +29,7 @@ const initialValues = {
   taxaDeslocamento: ""
 };
 const SignupSchema = Yup.object().shape({
+  avatar_url: Yup.string().required("A foto de perfil é obrigatória"),
   name: Yup.string()
     .min(4, "Muito curto")
     .max(40, "Muito longo")
@@ -65,9 +66,24 @@ function FormProf({ navigation }) {
 
   const submit = async (values, actions) => {
     try {
-      const response = await api.post("/profs", { ...values, ...location });
-      Alert.alert("Atenção", "Cadastro realizado com sucesso!");
-      console.log(response);
+      const responseFile = await fetch(values.avatar_url);
+      const blob = await responseFile.blob();
+      firebase
+        .storage()
+        .ref()
+        .child("fotos_Perfil")
+        .put(blob)
+        .then(response => {
+          response.ref.getDownloadURL().then(async url => {
+            const response = await api.post("/profs", {
+              ...values,
+              ...location,
+              avatar_url: url
+            });
+            Alert.alert("Atenção", "Cadastro realizado com sucesso!");
+            console.log(response);
+          });
+        });
     } catch (e) {
       Alert.alert("Atenção", "Houve um erro, tente novamente");
       console.log(e);
@@ -97,9 +113,10 @@ function FormProf({ navigation }) {
       status = await ImagePicker.requestCameraRollPermissionsAsync();
     }
   };
-  const setAvatar = async () => {
+  const setAvatar = async setFieldValue => {
     const image = await ImagePicker.launchImageLibraryAsync();
     setImageUri(image.uri);
+    setFieldValue("avatar_url", image.uri);
   };
   useEffect(() => {
     loginFirebase();
@@ -192,7 +209,11 @@ function FormProf({ navigation }) {
               </View>
               <View style={styles.ViewAvatar}>
                 {passo == 0 && (
-                  <AppProfAvatar uri={imageUri} setAvatar={setAvatar} />
+                  <AppProfAvatar
+                    uri={imageUri}
+                    setAvatar={setAvatar}
+                    setFieldValue={setFieldValue}
+                  />
                 )}
               </View>
             </View>

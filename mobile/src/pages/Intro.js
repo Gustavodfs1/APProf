@@ -62,10 +62,8 @@ const styles = StyleSheet.create({
   buttonn: {
     backgroundColor: "#54CEDB",
     marginTop: 30,
-    color: "#54CEDB",
     width: 150,
-    borderRadius: 50,
-    fontSize: 60
+    borderRadius: 50
   },
   input: {
     paddingHorizontal: 20,
