@@ -3,7 +3,6 @@ import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import {} from "react";
 import Main from "./Main";
-import Profile from "./Profile";
 import Intro from "./Intro";
 import ProfileProf from "./ProfileProf";
 import FormProf from "./FormProf";
@@ -25,19 +24,6 @@ const Config = createStackNavigator(
       navigationOptions: {
         title: "Cadastre-se"
       }
-    },
-    Profile: {
-      screen: Profile,
-      navigationOptions: {
-        title: "Perfil no Github"
-      }
-    },
-    ProfileProf: {
-      screen: ProfileProf,
-      navigationOptions: {
-        title: "ProfileProf",
-        headerShown: false
-      }
     }
   },
   {
@@ -50,14 +36,24 @@ const Config = createStackNavigator(
     }
   }
 );
-
-const Routes = createBottomTabNavigator({
+const Stack = createStackNavigator({
   Main: {
     screen: Main,
     navigationOptions: {
       title: "Encontre seu professor"
     }
   },
+  ProfileProf: {
+    screen: ProfileProf,
+    navigationOptions: {
+      title: "ProfileProf",
+      headerShown: false
+    }
+  }
+});
+
+const Routes = createBottomTabNavigator({
+  Main: Stack,
   Config
 });
 
