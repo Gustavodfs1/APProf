@@ -9,7 +9,6 @@ const DevSchema = new mongoose.Schema({
   avatar_url: String,
   materias: { type: String },
   bio: { type: String, required: true },
-  descricao: { type: String, required: true },
   precoHora: { type: String, required: true },
   individual: String,
   vouatevoce: String,

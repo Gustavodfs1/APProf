@@ -5,7 +5,8 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  SafeAreaView
 } from "react-native";
 import MapView, { Marker, Callout } from "react-native-maps";
 import {
@@ -107,7 +108,7 @@ function Main({ navigation }) {
               <View style={styles.callout}>
                 <Text style={styles.devName}>{dev.name}</Text>
                 <Text style={styles.devBio}>{dev.bio}</Text>
-                <Text style={styles.devTechs}>{dev.techs.join(", ")}</Text>
+                <Text style={styles.devTechs}>{dev.materias}</Text>
               </View>
             </Callout>
           </Marker>
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
   },
   SearchForm: {
     position: "absolute",
-    top: 20,
+    top: 55,
     left: 20,
     right: 20,
     zIndex: 5,

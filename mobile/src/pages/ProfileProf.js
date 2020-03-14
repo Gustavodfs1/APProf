@@ -17,6 +17,8 @@ function ProfileProf({ navigation }) {
   const SCREEN_HEIGHT = Dimensions.get("window").height;
   const SCREEN_WIDTH = Dimensions.get("window").width;
   const SCREEN_SCALE = Dimensions.get("window").scale;
+  const dev = navigation.getParam("dev");
+  const materiaProcurada = navigation.getParam("materiaProcurada");
 
   return (
     <View
@@ -31,10 +33,10 @@ function ProfileProf({ navigation }) {
       <ParallaxScrollView
         windowHeight={SCREEN_HEIGHT * 0.4}
         backgroundSource={require("./assets/tutorando.png")}
-        navBarTitle="Gustavo Faria"
-        userName="Gustavo Faria"
-        userTitle="Biologia"
-        userImage="https://media-exp1.licdn.com/dms/image/C4E03AQFOgoziO6xKpQ/profile-displayphoto-shrink_200_200/0?e=1585180800&v=beta&t=KtpnJnk3Dea_Dk_-XhNRsSC_IjYA3UsUMatAHxGMd94"
+        navBarTitle={dev.name}
+        userName={dev.name}
+        userTitle={materiaProcurada}
+        userImage={dev.avatar_url}
         leftIcon={{
           name: "rocket",
           color: "rgba(193, 193, 193, 1)",
@@ -81,11 +83,7 @@ function ProfileProf({ navigation }) {
               }}
             >
               <Text style={styles.titulo}>Quem sou...</Text>
-              <Text style={styles.bio}>
-                Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne
-                aLorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne a
-                sapientem eu nam. Qui ne aLorem
-              </Text>
+              <Text style={styles.bio}>{dev.bio}</Text>
             </View>
             <View
               style={{
@@ -95,17 +93,13 @@ function ProfileProf({ navigation }) {
               }}
             >
               <Text style={styles.titulo}>Dou aula de:</Text>
-              <Text style={styles.bio}>
-                Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne
-                aLorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne a
-                sapientem eu nam. Qui ne aLorem
-              </Text>
+              <Text style={styles.bio}>{dev.materias}</Text>
             </View>
             <PricingCard
               borderRadius={40}
               color="#54CEDB"
               title="Hora/Aula"
-              price="R$25"
+              price={`R$ ${dev.precoHora}`}
               info={["Individual", "Vou até você", "Sem taxa de deslocamento"]}
               button={{ title: " Entrar em contato!", icon: "phone" }}
             />

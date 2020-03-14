@@ -1,61 +1,64 @@
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
-
+import { createBottomTabNavigator } from "react-navigation-tabs";
+import {} from "react";
 import Main from "./Main";
 import Profile from "./Profile";
 import Intro from "./Intro";
 import ProfileProf from "./ProfileProf";
 import FormProf from "./FormProf";
 
-const Routes = createAppContainer(
-  createStackNavigator(
-    {
-      Intro: {
-        screen: Intro,
-        navigationOptions: {
-          title: "",
-          headerStyle: {
-            height: 1
-          }
-        }
-      },
-      Main: {
-        screen: Main,
-        navigationOptions: {
-          title: "Encontre seu professor"
-        }
-      },
-      FormProf: {
-        screen: FormProf,
-        navigationOptions: {
-          title: "FormProf",
-          headerShown: false
-        }
-      },
-      Profile: {
-        screen: Profile,
-        navigationOptions: {
-          title: "Perfil no Github"
-        }
-      },
-      ProfileProf: {
-        screen: ProfileProf,
-        navigationOptions: {
-          title: "ProfileProf",
-          headerShown: false
+const Config = createStackNavigator(
+  {
+    Intro: {
+      screen: Intro,
+      navigationOptions: {
+        title: "",
+        headerStyle: {
+          height: 1
         }
       }
     },
-    {
-      defaultNavigationOptions: {
-        headerTintColor: "#fff",
-        headerBackTitleVisible: false,
-        headerStyle: {
-          backgroundColor: "#54CEDB"
-        }
+
+    FormProf: {
+      screen: FormProf,
+      navigationOptions: {
+        title: "Cadastre-se"
+      }
+    },
+    Profile: {
+      screen: Profile,
+      navigationOptions: {
+        title: "Perfil no Github"
+      }
+    },
+    ProfileProf: {
+      screen: ProfileProf,
+      navigationOptions: {
+        title: "ProfileProf",
+        headerShown: false
       }
     }
-  )
+  },
+  {
+    defaultNavigationOptions: {
+      headerTintColor: "#fff",
+      headerBackTitleVisible: false,
+      headerStyle: {
+        backgroundColor: "#54CEDB"
+      }
+    }
+  }
 );
 
-export default Routes;
+const Routes = createBottomTabNavigator({
+  Main: {
+    screen: Main,
+    navigationOptions: {
+      title: "Encontre seu professor"
+    }
+  },
+  Config
+});
+
+export default createAppContainer(Routes);

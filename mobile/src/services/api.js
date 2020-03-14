@@ -1,7 +1,11 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://192.168.0.11:3333"
+  baseURL: "http://localhost:3333"
 });
 
 export default api;
+
+export const apiTest = axios.create({
+  baseURL: "http://ip.jsontest.com"
+});

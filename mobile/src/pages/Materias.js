@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextInput, Chip } from "react-native-paper";
-import { StyleSheet, View, Text } from "react-native";
-import { ListItem, Button as ButtonIcon } from "react-native-elements";
+import { StyleSheet, View } from "react-native";
+import { Button as ButtonIcon } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 function Materias({
@@ -20,9 +20,15 @@ function Materias({
       const arrayM = materias.split(",").filter(v => v != "");
 
       if (!arrayM.includes(materia)) {
-        let materiaConcatenada = materias.concat(",").concat(materia);
-        setMaterias(materiaConcatenada);
-        setFieldValue("materias", materiaConcatenada);
+        if (materias.length > 0) {
+          let materiaConcatenada = materias.concat(",").concat(materia.trim());
+          setMaterias(materiaConcatenada);
+          setFieldValue("materias", materiaConcatenada);
+        } else {
+          setMaterias(materia.trim());
+          setFieldValue("materias", materia.trim());
+        }
+
         setMateria("");
       }
     }

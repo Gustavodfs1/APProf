@@ -2,7 +2,15 @@ import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
 import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
-import { Alert, KeyboardAvoidingView, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Text,
+  SafeAreaView
+} from "react-native";
 import { Button } from "react-native-elements";
 import * as Yup from "yup";
 import api from "../services/api";
@@ -63,50 +71,65 @@ function FormProf({ navigation }) {
   const [location, setLocation] = useState({});
   const [passo, setPasso] = useState(0);
   const [imageUri, setImageUri] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const submit = async (values, actions) => {
     try {
       const responseFile = await fetch(values.avatar_url);
       const blob = await responseFile.blob();
-      firebase
+      const uploadTask = firebase
         .storage()
         .ref()
-        .child("fotos_Perfil")
-        .put(blob)
-        .then(response => {
-          response.ref.getDownloadURL().then(async url => {
-            const response = await api.post("/profs", {
-              ...values,
-              ...location,
-              avatar_url: url
-            });
-            Alert.alert("Atenção", "Cadastro realizado com sucesso!");
-            console.log(response);
+        .child(`fotos_Perfil/${values.eMail}`)
+        .put(blob);
+      uploadTask.snapshot.ref.getDownloadURL().then(async url => {
+        try {
+          const response = await api.post("/profs", {
+            ...values,
+            ...location,
+            avatar_url: url
           });
-        });
+        } catch (e) {
+          console.log(e);
+        }
+
+        actions.setSubmitting(false);
+        Alert.alert("Atenção", "Cadastro realizado com sucesso!");
+      });
     } catch (e) {
       Alert.alert("Atenção", "Houve um erro, tente novamente");
       console.log(e);
+    } finally {
+      actions.setSubmitting(false);
     }
   };
 
-  _getLocationAsync = async () => {
+  const _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== "granted") {
       Alert.alert("Atenção", "Sem localizacao nao sera possivel");
     } else {
       let location = await Location.getCurrentPositionAsync({});
-      console.log(location);
       setLocation({
         longitude: location.coords.longitude,
         latitude: location.coords.latitude
       });
     }
   };
-  loginFirebase = async () => {
-    await firebase.auth().signInAnonymously();
+
+  const loginFirebase = async () => {
+    try {
+      await firebase.auth().signInAnonymously();
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          setLoading(false);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
-  avatarup = async () => {
+  const avatarup = async () => {
     let { status } = await ImagePicker.requestCameraRollPermissionsAsync();
     if (status !== "granted") {
       Alert.alert("Atenção", "A foto de perfil é obrigatória");
@@ -124,6 +147,13 @@ function FormProf({ navigation }) {
     _getLocationAsync();
   }, []);
 
+  if (loading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
   return (
     <Formik
       initialValues={initialValues}
@@ -137,10 +167,11 @@ function FormProf({ navigation }) {
         values,
         errors,
         touched,
-        setFieldValue
+        setFieldValue,
+        isSubmitting
       }) => (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-          <View style={styles.View}>
+          <SafeAreaView style={styles.View}>
             <View style={styles.flex}>
               <View style={styles.backform}>
                 <View style={{ flex: 4 }}>
@@ -185,6 +216,7 @@ function FormProf({ navigation }) {
                       buttonStyle={{ backgroundColor: "green" }}
                       title="Salvar"
                       onPress={handleSubmit}
+                      disabled={isSubmitting}
                     ></Button>
                   )}
                   {passo < 2 && (
@@ -194,6 +226,7 @@ function FormProf({ navigation }) {
                       onPress={() => {
                         setPasso(p => p + 1);
                       }}
+                      disabled={isSubmitting}
                     ></Button>
                   )}
                   {passo > 0 && (
@@ -203,6 +236,7 @@ function FormProf({ navigation }) {
                       onPress={() => {
                         setPasso(p => p - 1);
                       }}
+                      disabled={isSubmitting}
                     ></Button>
                   )}
                 </View>
@@ -217,7 +251,7 @@ function FormProf({ navigation }) {
                 )}
               </View>
             </View>
-          </View>
+          </SafeAreaView>
         </KeyboardAvoidingView>
       )}
     </Formik>

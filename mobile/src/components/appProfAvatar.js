@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar } from "react-native-elements";
+import { Avatar, Icon } from "react-native-elements";
 import { StyleSheet } from "react-native";
 
 const AppProfAvatar = ({ uri, setAvatar, setFieldValue }) => {
@@ -11,7 +11,7 @@ const AppProfAvatar = ({ uri, setAvatar, setFieldValue }) => {
         rounded
         activeOpacity={0.7}
         style={styles.Avatar}
-        icon="view-array"
+        icon={{ name: "user", type: "font-awesome" }}
         showEditButton
       />
     );

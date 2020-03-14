@@ -15,6 +15,7 @@ function InfoPrincipais({ touched, errors, values, handleChange, handleBlur }) {
         value={values.name}
       ></TextInput>
       <TextInput
+        keyboardType="email-address"
         mode="flat"
         errorMessage={touched.email ? errors.email : null}
         type="email"
@@ -25,6 +26,7 @@ function InfoPrincipais({ touched, errors, values, handleChange, handleBlur }) {
         value={values.eMail}
       ></TextInput>
       <TextInput
+        secureTextEntry
         mode="flat"
         errorMessage={touched.senha ? errors.senha : null}
         type="password"
@@ -35,6 +37,7 @@ function InfoPrincipais({ touched, errors, values, handleChange, handleBlur }) {
         value={values.senha}
       ></TextInput>
       <TextInput
+        keyboardType="number-pad"
         mode="flat"
         errorMessage={touched.telefone ? errors.telefone : null}
         type="tel"

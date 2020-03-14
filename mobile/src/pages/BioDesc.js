@@ -13,15 +13,9 @@ function BioDesc({ touched, errors, values, handleChange, handleBlur }) {
         onBlur={handleBlur("bio")}
         value={values.bio}
       ></TextInput>
+
       <TextInput
-        errorMessage={touched.descricao ? errors.descricao : null}
-        label="Você oferece quais matérias?"
-        style={styles.inputBio}
-        onChangeText={handleChange("descricao")}
-        onBlur={handleBlur("descricao")}
-        value={values.descricao}
-      ></TextInput>
-      <TextInput
+        keyboardType="decimal-pad"
         errorMessage={touched.precoHora ? errors.precoHora : null}
         label="Qual o valor da sua Hora/Aula?"
         style={styles.inputBio}
