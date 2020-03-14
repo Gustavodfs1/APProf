@@ -12,6 +12,7 @@ import { Dimensions } from "react-native";
 
 import ParallaxScrollView from "react-native-parallax-scrollview";
 import { PricingCard, Rating } from "react-native-elements";
+import Main from "./Main";
 
 function ProfileProf({ navigation }) {
   const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -37,18 +38,6 @@ function ProfileProf({ navigation }) {
         userName={dev.name}
         userTitle={materiaProcurada}
         userImage={dev.avatar_url}
-        leftIcon={{
-          name: "rocket",
-          color: "rgba(193, 193, 193, 1)",
-          size: 30,
-          type: "font-awesome"
-        }}
-        rightIcon={{
-          name: "user",
-          color: "rgba(193, 193, 193, 1)",
-          size: 30,
-          type: "font-awesome"
-        }}
       >
         <View
           style={{

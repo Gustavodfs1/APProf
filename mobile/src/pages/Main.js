@@ -17,6 +17,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import api from "../services/api";
 import { connect, disconnect, subscribeToNewProfs } from "../services/socket";
+import firebase from "firebase";
+import "firebase/auth";
 
 function Main({ navigation }) {
   const [profs, setProfs] = useState([]);
@@ -37,16 +39,29 @@ function Main({ navigation }) {
         setCurrentRegion({
           latitude,
           longitude,
-          latitudeDelta: 0.03,
-          longitudeDelta: 0.03
+          latitudeDelta: 1.03,
+          longitudeDelta: 1.03
         });
       }
     }
     loadInitialPosition();
   }, []);
-
+  const loginFirebase = async () => {
+    try {
+      await firebase.auth().signInAnonymously();
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          //setLoading(false);
+          console.log(user);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
     subscribeToNewProfs(prof => setProf([...profs, prof]));
+    loginFirebase();
   }, [profs]);
 
   function setupWebsocket() {
@@ -102,7 +117,10 @@ function Main({ navigation }) {
             />
             <Callout
               onPress={() => {
-                navigation.navigate("ProfileProf", {});
+                navigation.navigate("ProfileProf", {
+                  dev,
+                  materiaProcurada: materias
+                });
               }}
             >
               <View style={styles.callout}>
